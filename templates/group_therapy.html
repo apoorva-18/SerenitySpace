@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Therapy</title>
+    <link rel="stylesheet" href="/static/group_therapy.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Group Therapy Sessions</h1>
+        <div class="sessions">
+            {% for session in sessions %}
+            <div class="session">
+                <h2>{{ session['title'] }}</h2>
+                <p><strong>Date:</strong> {{ session['date'] }}</p>
+                <p><strong>Description:</strong> {{ session['description'] }}</p>
+                <a href="/register_session/{{ session['_id'] }}" class="register-btn">Register</a>
+            </div>
+            <div id="session-list"></div>
+            {% endfor %}
+        </div>
+        <a href="/home/{{ user['_id'] }}" class="back-btn">Back to Home</a>
+    </div>
+
+    <script>
+        const socket = io();
+        socket.on('group_therapy_update', (session) => {
+            const sessionList = document.getElementById("session-list");
+            const newSession = document.createElement("div");
+            newSession.className = "session";
+            newSession.innerHTML = `
+                <h3>${session.title}</h3>
+                <p>${session.description}</p>
+                <small>Time: ${session.time}</small>
+            `;
+            sessionList.prepend(newSession);
+        });
+    </script>
+</body>
+</html>

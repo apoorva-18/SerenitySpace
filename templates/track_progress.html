@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Progress</title>
+    <link rel="stylesheet" href="/static/progress.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Progress</h1>
+
+        <!-- Display the mood entries -->
+        {% if entries %}
+        <div class="entry-section">
+            <h2>Mood Entries</h2>
+            <ul class="entry-list">
+                {% for entry in entries %}
+                <li>
+                    <span class="entry-icon">📅</span>
+                    <div>
+                        <strong>{{ entry.date }}</strong>: 
+                        <span class="entry-mood">{{ entry.mood }}</span>
+                        <p>{{ entry.thoughts }}</p>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Mood Chart Section -->
+        <div class="chart-section">
+            <h2>Your Mood Over Time</h2>
+            <canvas id="moodChart"></canvas>
+        </div>
+
+        {% else %}
+        <p>No entries found. Start tracking your mood today!</p>
+        {% endif %}
+    </div>
+
+    <script>
+        {% if entries %}
+        // Extract mood and date data
+        const moodData = [
+            {% for entry in entries %}
+                "{{ entry.mood }}",
+            {% endfor %}
+        ];
+
+        const dateData = [
+            {% for entry in entries %}
+                "{{ entry.date }}",
+            {% endfor %}
+        ];
+        const normalizeMood = (mood) => mood.trim().toLowerCase();
+
+
+        // Map moods to numerical values for the chart
+        const moodValueMap = {
+            "happy": 3,
+            "joyful": 3,
+            "excited": 3,
+            "content": 3,
+            "relieved": 3,
+            "cheerful": 3,
+            
+            "neutral": 2,
+            "calm": 2,
+            "relaxed": 2,
+            "uncertain": 2,
+            "indifferent": 2,
+            "composed": 2,
+            
+            "sad": 1,
+            "anxious": 1,
+            "depressed": 1,
+            "lonely": 1,
+            "hopeless": 1,
+            "heartbroken": 1,
+            
+            "angry": 0,
+            "frustrated": 0,
+            "irritated": 0,
+            "resentful": 0,
+            "enraged": 0,
+            "annoyed": 0
+        };
+    
+        // Convert mood entries to numerical values using the normalized mood data
+        const moodValues = moodData.map(mood => {
+            const normalizedMood = normalizeMood(mood);
+            return moodValueMap[normalizedMood] !== undefined ? moodValueMap[normalizedMood] : 2; // Default to Neutral if no match
+        });
+    
+        
+        // Custom tooltips for better clarity
+        const moodTooltipLabels = {
+            3: "Happy (e.g., Joyful, Excited, Cheerful)",
+            2: "Neutral (e.g., Calm, Relaxed, Composed)",
+            1: "Sad (e.g., Anxious, Depressed, Heartbroken)",
+            0: "Angry (e.g., Frustrated, Irritated, Annoyed)"
+        };
+         // Default: Neutral
+
+        // Chart.js configuration
+        const ctx = document.getElementById('moodChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(75, 192, 192, 1)');
+        gradient.addColorStop(1, 'rgba(75, 192, 192, 0.1)');
+
+        const moodChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dateData,
+                datasets: [{
+                    label: 'Mood Over Time',
+                    data: moodValues,
+                    borderColor: '#4a90e2',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#4a90e2',
+                    pointBorderColor: '#fff',
+                    pointRadius: 5,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return moodTooltipLabels[tooltipItem.raw];
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            callback: function(value) {
+                                return moodTooltipLabels[value] ? moodTooltipLabels[value].split(" ")[0] : "Unknown";
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Mood Level',
+                            color: '#4a90e2',
+                            font: { size: 14, weight: 'bold' }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Dates',
+                            color: '#4a90e2',
+                            font: { size: 14, weight: 'bold' }
+                        }
+                    }
+                }
+            }
+        });
+        {% endif %}
+    </script>
+</body>
+</html>

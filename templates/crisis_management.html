@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crisis Management</title>
+    <link rel="stylesheet" href="/static/crisis.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Crisis Management</h1>
+      {% if flagged_entries %}
+      <h2>Flagged Entries</h2>
+      <ul>
+        {% for entry in flagged_entries %}
+        <li><strong>{{ entry.date }}</strong>: {{ entry.thoughts }}</li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p>No flagged entries detected.</p>
+      {% endif %}
+
+      <!-- Display Helplines if crisis detected -->
+      <div class="helplines">
+        <h3>If you're feeling in crisis, please reach out for support:</h3>
+        {% if 'general_crisis' in detected_categories %}
+        <div class="category">
+          <h4>General Support:</h4>
+          <ul>
+            <li><strong>National Helpline (India):</strong> 91-12345-67890</li>
+            <li>
+              <strong>Suicide Prevention Helpline:</strong> 91-800-123-4567
+            </li>
+          </ul>
+        </div>
+        {% endif %} {% if 'anxiety_stress' in detected_categories %}
+        <div class="category">
+          <h4>For Anxiety and Stress:</h4>
+          <ul>
+            <li><strong>Anxiety Support Line:</strong> 91-900-555-4321</li>
+            <li><strong>Stress Relief Services:</strong> 91-800-999-8765</li>
+          </ul>
+        </div>
+        {% endif %} {% if 'grief_loss' in detected_categories %}
+        <div class="category">
+          <h4>For Grief and Loss:</h4>
+          <ul>
+            <li><strong>Grief Helpline:</strong> 91-777-666-5432</li>
+            <li><strong>Loss Support Service:</strong> 91-888-999-1112</li>
+          </ul>
+        </div>
+        {% endif %} 
+        
+        {% if 'anger_frustration' in detected_categories %}
+        <div class="category">
+          <h4>For Anger and Frustration:</h4>
+          <ul>
+            <li><strong>Anger Management Support:</strong> 91-555-444-2222</li>
+            <li>
+              <strong>Conflict Resolution Helpline:</strong> 91-666-555-7777
+            </li>
+          </ul>
+        </div>
+        {% endif %} 
+        {% if 'substance_use' in detected_categories %}
+        <div class="category">
+          <h4>For Substance Use:</h4>
+          <ul>
+            <li><strong>Substance Abuse Helpline:</strong> 91-700-888-6543</li>
+            <li><strong>Drug Addiction Support:</strong> 91-800-444-2222</li>
+          </ul>
+        </div>
+        {% endif %}
+        <p>
+          If you need immediate help, don't hesitate to reach out to these
+          services.
+        </p>
+      </div>
+      {% if not flagged_entries and not detected_categories %}
+        <p>No crisis detected. Keep up with your progress!</p>
+      {% endif %}
+    </div>
+
+    <!-- Notification Sound (only plays if flagged entries are found) -->
+    {% if flagged_entries %}
+    <audio id="alert-sound" src="/static/alert-sound.mp3" autoplay></audio>
+    <script>
+      // Play sound notification for crisis
+      const alertSound = document.getElementById("alert-sound");
+      alertSound.play();
+    </script>
+    {% endif %}
+  </body>
+</html>

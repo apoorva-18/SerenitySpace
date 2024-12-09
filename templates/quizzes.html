@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Quizzes</title>
+    <link rel="stylesheet" href="/static/quiz.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Interactive Mood Quizzes</h1>
+        <div class="quizzes">
+            {% for quiz in quizzes %}
+            <div class="quiz">
+                <h2>{{ quiz['title'] }}</h2>
+                <p>{{ quiz['description'] }}</p>
+                <a href="/take_quiz/{{ quiz['_id'] }}" class="quiz-btn">Take Quiz</a>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="/home/{{ user['_id'] }}" class="back-btn">Back to Home</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,97 @@
+/* General Reset */
+body, html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #6dd5ed, #2193b0); /* Soft blue gradient */
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+/* Container Styling */
+.container {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px 30px;
+    width: 90%;
+    max-width: 600px;
+    text-align: center;
+    animation: fadeIn 1s ease-in-out;
+}
+
+h1 {
+    font-size: 2.4rem;
+    margin-bottom: 20px;
+    color: #2980b9;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Challenge Styling */
+.challenges {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.challenge {
+    background: #f0f8ff;
+    border: 1px solid #b2ebf2;
+    border-radius: 10px;
+    padding: 15px 20px;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.challenge:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+    color: #0077c2;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #34495e;
+    line-height: 1.6;
+}
+
+/* Back to Home Button */
+a {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    background: #3498db;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+a:hover {
+    background: #2980b9;
+    transform: scale(1.05);
+    text-decoration: none;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

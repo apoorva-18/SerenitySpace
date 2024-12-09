@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Support</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>Welcome to the Mental Health Support Platform</h1>
+    <nav>
+        <a href="/progress_tracking">Track Progress</a>
+        <a href="/crisis_management">Crisis Management</a>
+    </nav>
+    <form id="chat-form">
+        <label for="message">How are you feeling? Describe your symptoms:</label><br>
+        <input type="text" id="message" name="message" required>
+        <button type="submit">Submit</button>
+        <button type="button" id="voice-btn">🎤 Speak</button>
+    </form>
+    <div id="response"></div>
+
+    <script>
+        document.getElementById('chat-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = document.getElementById('message').value;
+            const responseDiv = document.getElementById('response');
+            responseDiv.innerHTML = 'Processing...';
+
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message })
+            });
+            const result = await response.json();
+            if (result.status === 'success') {
+                responseDiv.innerHTML = `<p><strong>Guidance:</strong> ${result.guidance}</p>
+                                         <p><strong>Suggested Medications:</strong> ${result.medication.join(', ')}</p>`;
+            } else {
+                responseDiv.innerHTML = `<p>${result.message}</p>`;
+            }
+        });
+        const voiceBtn = document.getElementById('voice-btn');
+        voiceBtn.addEventListener('click', () => {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+                voiceBtn.textContent = '🎤 Listening...';
+            };
+
+            recognition.onspeechend = () => {
+                recognition.stop();
+                voiceBtn.textContent = '🎤 Speak';
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('message').value = transcript;
+            };
+
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+            };
+
+            recognition.start();
+        });
+    </script>
+</body>
+</html>

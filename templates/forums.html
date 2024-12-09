@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Support Forums</title>
+    <link rel="stylesheet" href="/static/forum.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="forum-header">
+            <img src="/static/logo.png" alt="Community Logo" class="logo">
+            <h1>Community Support Forums</h1>
+            <h3>Welcome, {{ user.username }}</h3>
+        </header>
+
+        <!-- Forum Post Form -->
+        <form method="POST" action="/forums/{{ user['_id'] }}" class="forum-form">
+            <input type="hidden" name="user_id" value="{{ user['_id'] }}">
+            <input type="text" name="title" placeholder="Write a Post Title" required class="input-field">
+            <textarea name="content" placeholder="Write your thoughts here..." rows="5" required class="input-field"></textarea>
+            <button type="submit"><i class="fas fa-paper-plane"></i> Post</button>
+        </form>
+
+        <!-- Display All Posts -->
+        <div id="post-list">
+            {% for post in posts %}
+            <div id="post-{{ post['_id'] }}" class="post-card">
+                <h2>{{ post['title'] }}</h2>
+                <p>{{ post['content'] }}</p>
+                <div class="post-actions">
+                    {% if post['user_id'] == user['_id'] %}
+                    <button class="delete-btn" onclick="deletePost('{{ post['_id'] }}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                    {% endif %}
+                </div>
+
+                <!-- Comment Form -->
+                <form method="POST" action="/forums/{{ post['_id'] }}/comment" class="comment-form">
+                    <input type="hidden" name="user_id" value="{{ user['_id'] }}">
+                    <input type="text" name="username" placeholder="Your Name" required class="input-field">
+                    <textarea name="content" placeholder="Write a comment..." rows="2" required class="input-field"></textarea>
+                    <button type="submit"><i class="fas fa-comment"></i> Comment</button>
+                </form>
+
+                <h3>Comments:</h3>
+                <div class="comments">
+                    {% for comment in post['comments'] %}
+                    <div class="comment-item" id="comment-{{ comment['_id'] }}">
+                        <strong>{{ comment['username'] }}:</strong>
+                        <p>{{ comment['content'] }}</p>
+                        {% if comment['user_id'] == user['_id'] %}
+                        <button class="delete-btn" onclick="deleteComment('{{ post['_id'] }}', '{{ comment['_id'] }}')">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+
+        {% for post in posts %}
+        const roomId = "{{ post['_id'] }}";
+        socket.emit('join', { room: roomId, username: "{{ user['username'] }}" });
+
+        socket.on(`comment_added_${roomId}`, (comment) => {
+            const commentDiv = document.querySelector(`#post-{{ post['_id'] }} .comments`);
+            const newComment = document.createElement('div');
+            newComment.className = 'comment-item';
+            newComment.id = `comment-${comment._id}`;
+            newComment.innerHTML = `
+                <strong>${comment.username}:</strong>
+                <p>${comment.content}</p>
+            `;
+            commentDiv.appendChild(newComment);
+        });
+
+        function deleteComment(postId, commentId) {
+            fetch(`/forums/${postId}/comment/${commentId}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: "{{ user['_id'] }}" })
+            }).then(response => {
+                if (response.ok) {
+                    document.getElementById(`comment-${commentId}`).remove();
+                }
+            });
+        }
+
+        function deletePost(postId) {
+            fetch(`/forums/${postId}`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_id: "{{ user['_id'] }}" })
+            }).then(response => {
+                if (response.ok) {
+                    document.getElementById(`post-${postId}`).remove();
+                }
+            });
+        }
+        {% endfor %}
+    </script>
+</body>
+</html>

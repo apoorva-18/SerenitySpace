@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write a Journal</title>
+    <link rel="stylesheet" href="/static/journal.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Write a Journal Entry</h1>
+        <form method="POST" action="/add_diary/{{ user_id }}">
+            <label for="mood">Mood:</label>
+            <input type="text" id="mood" name="mood" required>
+            <label for="thoughts">Thoughts:</label>
+            <textarea id="thoughts" name="thoughts" required></textarea>
+            <button type="submit">Save Entry</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body and Container */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fc;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    padding-bottom: 30px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #4a90e2;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* Session List */
+.sessions {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.session {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.session:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+.session h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.session p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.register-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4a90e2;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+    background-color: #357ab7;
+}
+
+/* Back to Home Button */
+.back-btn {
+    display: inline-block;
+    margin-top: 30px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #4a90e2;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: 2px solid #4a90e2;
+    transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+    background-color: #4a90e2;
+    color: #fff;
+}
+
+/* Session Updates (Dynamic New Sessions) */
+#session-list {
+    margin-top: 30px;
+}
+#session-list .session {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#session-list .session h3 {
+    color: #333;
+    font-size: 1.5rem;
+}
+
+#session-list .session small {
+    display: block;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #888;
+}

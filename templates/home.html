@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Dashboard</title>
+    <link rel="stylesheet" href="/static/home.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Hello, {{ user['username'] }}</h1>
+        <nav>
+            <a href="/add_diary/{{ user['_id'] }}">Write a Journal</a>
+            <a href="/forums/{{ user['_id'] }}">Go to Forums</a>
+
+            <a href="/group_therapy/{{ user['_id'] }}">Group Therapy</a>
+            <a href="/rewards/{{ user['_id'] }}">My Rewards</a>
+            
+            <a href="/challenges/{{ user['_id'] }}">Challenges</a>
+            <a href="/quizzes/{{ user['_id'] }}">Quizzes</a>
+            <a href="/track_progress/{{ user['_id'] }}">Track Progress</a>
+            <a href="/check_crisis/{{ user['_id'] }}">Crisis Management</a>
+            <a href="/ai_chatbot/{{ user['_id'] }}">AI Chatbot Assistant</a>
+        </nav>
+    </div>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+    <script>
+        const socket = io();
+    </script>
+
+</body>
+
+
+</html>

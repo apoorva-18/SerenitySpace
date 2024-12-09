@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot Assistant</title>
+    <link rel="stylesheet" href="/static/chat.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <header class="chat-header">
+            <img src="/static/chatbot-icon.png" alt="Chatbot Icon" class="chatbot-icon">
+            <h1>AI Chatbot Assistant</h1>
+            <p>Your mental health companion</p>
+        </header>
+        <div id="chat-box">
+            <div class="bot-message">
+                <strong>Bagley:</strong> Hello! I'm Bagley, your mental health chatbot. How can I assist you today?
+            </div>
+        </div>
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="Type your message here..." required>
+            <button type="submit"><span>Send</span> 💬</button>
+        </form>
+        <button id="voice-btn">🎤 Speak</button>
+        <a href="/home/{{ user_id }}">🏠 Back to Home</a>
+    </div>
+    <script>
+        const chatForm = document.getElementById("chat-form");
+        const userInput = document.getElementById("user-input");
+        const chatBox = document.getElementById("chat-box");
+        const voiceBtn = document.getElementById("voice-btn");
+
+        function appendMessage(className, message) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = className;
+            messageDiv.textContent = message;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        chatForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const message = userInput.value.trim();
+            if (message) {
+                appendMessage("user-message", message);
+                userInput.value = "";
+
+                const response = await fetch(`/ai_chatbot/{{ user_id }}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message })
+                });
+                const result = await response.json();
+                if (result.status === "success") {
+                    appendMessage("bot-message", `Guidance: ${result.guidance}`);
+                    appendMessage("bot-message", `Medications: ${result.medication.join(", ")}`);
+                } else {
+                    appendMessage("bot-message", result.message);
+                }
+            }
+        });
+        voiceBtn.addEventListener("click", () => {
+            if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+                // Use client-side voice recognition
+                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.lang = 'en-US';
+
+                recognition.onstart = () => {
+                    appendMessage("bot-message", "🎤 Listening for your voice input...");
+                };
+
+                recognition.onspeechend = () => {
+                    recognition.stop();
+                    appendMessage("bot-message", "Processing your voice input...");
+                };
+
+                recognition.onresult = async (event) => {
+                    const transcript = event.results[0][0].transcript;
+                    appendMessage("user-message", transcript);
+
+                    // Send recognized text to server
+                    const response = await fetch(`/ai_chatbot/{{ user_id }}`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ message: transcript })
+                    });
+                    const result = await response.json();
+                    if (result.status === "success") {
+                        appendMessage("bot-message", `Guidance: ${result.guidance}`);
+                        appendMessage("bot-message", `Medications: ${result.medication.join(", ")}`);
+                    } else {
+                        appendMessage("bot-message", result.message);
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    console.error('Speech recognition error:', event.error);
+                    appendMessage("bot-message", "Error: Unable to process voice input locally. Switching to server...");
+                    useServerForVoice();
+                };
+
+                recognition.start();
+            } else {
+                // Fallback to server-side voice recognition
+                useServerForVoice();
+            }
+        });
+
+        // Server-side voice recognition
+        async function useServerForVoice() {
+            appendMessage("bot-message", "Processing your voice input on the server...");
+            const response = await fetch("/voice-chat", { method: "POST" });
+            const result = await response.json();
+            if (result.status === "success") {
+                appendMessage("user-message", result.user_input);
+                appendMessage("bot-message", `Guidance: ${result.guidance}`);
+                appendMessage("bot-message", `Medications: ${result.medication.join(", ")}`);
+            } else {
+                appendMessage("bot-message", result.message);
+            }
+        }
+        
+    </script>
+</body>
+</html>

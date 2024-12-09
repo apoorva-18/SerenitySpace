@@ -1,0 +1,74 @@
+/* General Reset */
+body, h1, a {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #74ebd5, #9face6);
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container */
+.container {
+    text-align: center;
+    background: #fff;
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+}
+
+/* Header */
+.container h1 {
+    font-size: 2rem;
+    color: #4A4A4A;
+    margin-bottom: 1.5rem;
+}
+
+/* Navigation Menu */
+nav {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 1rem;
+}
+
+nav a {
+    text-decoration: none;
+    background: linear-gradient(135deg, #74ebd5, #9face6);
+    color: white;
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    transition: transform 0.3s, background-color 0.3s;
+    display: inline-block;
+}
+
+nav a:hover {
+    transform: translateY(-5px);
+    background: linear-gradient(135deg, #9face6, #74ebd5);
+}
+
+nav a:active {
+    transform: translateY(2px);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 480px) {
+    nav {
+        grid-template-columns: 1fr;
+    }
+}

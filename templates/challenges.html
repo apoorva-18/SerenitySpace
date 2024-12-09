@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Challenges</title>
+    <link rel="stylesheet" href="/static/challenges.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Challenges</h1>
+        <div class="challenges">
+            {% for challenge in challenges %}
+            <div class="challenge">
+                <h2>{{ challenge.title }}</h2>
+                <p>{{ challenge.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <a href="/home/{{ user['_id'] }}">Back to Home</a>
+    </div>
+</body>
+</html>

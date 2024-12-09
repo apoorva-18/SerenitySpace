@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Rewards</title>
+    <link rel="stylesheet" href="/static/rewards.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>My Rewards</h1>
+      <p>Welcome, {{ user['username'] }}! Here are your achievements:</p>
+      <p><strong>Points Earned:</strong> {{ rewards['points'] }}</p>
+      <h2>Badges:</h2>
+      <div class="badges">
+        {% for badge in rewards['badges'] %}
+        <div class="badge">
+          <p>{{ badge }}</p>
+        </div>
+        <h2>Recent Rewards:</h2>
+        <div id="reward-list"></div>
+
+        {% endfor %}
+      </div>
+      <a href="/home/{{ user['_id'] }}">Back to Home</a>
+    </div>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+
+    <script>
+      const socket = io();
+
+      // Listen for reward notifications from the backend
+      socket.on("reward_notification", (reward) => {
+        const rewardList = document.getElementById("reward-list");
+        const newReward = document.createElement("div");
+        newReward.className = "reward";
+        newReward.innerHTML = `
+        <h3>${reward.title}</h3>
+        <p>${reward.description}</p>
+    `;
+        rewardList.prepend(newReward);
+
+        // Optionally, show a toast notification
+        alert(`New Reward: ${reward.title}`);
+      });
+    </script>
+  </body>
+</html>

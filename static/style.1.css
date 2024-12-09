@@ -1,0 +1,82 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f0f8ff;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    margin: 20px 0;
+}
+
+input, textarea, button {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+button:hover {
+    background: #0056b3;
+}
+
+a {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    background: #28a745;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+a:hover {
+    background: #218838;
+}
+
+.badges, .quizzes, .sessions, .forum-posts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.badge, .quiz, .session, .post {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    background: #f9f9f9;
+    width: 100%;
+}
+
+.comment, .comments {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f1f1f1;
+    border-left: 4px solid #007bff;
+}
